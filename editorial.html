@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDITORIAL | OCTAVIOSKIAFFOS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background-color: #000; color: white; margin: 0; cursor: none; }
+        .cursor-dot { pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+        .noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+
+        .section { position: sticky; top: 0; height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 -10px 50px rgba(0,0,0,0.8); }
+        .section-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); transition: all 0.7s ease; transform: scale(1.1); }
+        .section:hover .section-img { filter: brightness(0.9); transform: scale(1); }
+        .content { position: relative; z-index: 10; text-align: center; pointer-events: none; }
+        .big-title { font-family: 'Playfair Display', serif; font-size: 6vw; font-style: italic; opacity: 0; transform: translateY(50px); transition: all 0.8s ease; }
+        .section:hover .big-title { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+    <a href="gallery1.html" class="fixed top-8 left-8 z-[60] text-xs font-mono tracking-[0.3em] uppercase text-white hover:text-red-500 transition mix-blend-difference">&larr; Back</a>
+
+    <section class="section bg-zinc-900">
+        <img src="https://images.unsplash.com/photo-1493863641943-9b68992a8d07?q=80&w=2058&auto=format&fit=crop" class="section-img">
+        <div class="content">
+            <span class="block text-xs font-mono tracking-widest text-red-500 mb-4">ISSUE 01</span>
+            <h2 class="big-title">The Beginning</h2>
+            <p class="mt-4 max-w-md mx-auto text-sm text-gray-300 font-light">Donde todo comenzó. Una narrativa sobre la soledad moderna.</p>
+        </div>
+    </section>
+
+    <section class="section bg-zinc-800">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop" class="section-img">
+        <div class="content">
+            <span class="block text-xs font-mono tracking-widest text-red-500 mb-4">ISSUE 02</span>
+            <h2 class="big-title">Raw Emotion</h2>
+        </div>
+    </section>
+
+    <section class="section bg-zinc-700">
+        <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=2070&auto=format&fit=crop" class="section-img">
+        <div class="content">
+            <span class="block text-xs font-mono tracking-widest text-red-500 mb-4">ISSUE 03</span>
+            <h2 class="big-title">Film Noir</h2>
+        </div>
+    </section>
+
+    <div class="h-[50vh] bg-black flex items-center justify-center relative z-20">
+        <p class="text-xs font-mono text-gray-500 tracking-widest">END OF STORY</p>
+    </div>
+
+    <script>
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', e => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+    </script>
+</body>
+</html>

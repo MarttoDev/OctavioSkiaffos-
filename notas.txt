@@ -1,0 +1,14 @@
+CAMBIOS
+
+
+** Gallery
+- centrar foto palomamami comissions
+- quitar zoom indice 1 2 3 - 4no 
+- movimiento letas en bloque no espaciado
+
+** MAIN
+- linkear redes
+- cambiar contacto
+- linkear mi pagina
+- nav quitar italic y subrayado
+

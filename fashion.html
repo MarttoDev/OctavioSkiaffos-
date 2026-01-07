@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FASHION | OCTAVIOSKIAFFOS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background-color: #000; color: white; cursor: none; overflow: hidden; height: 100vh; width: 100vw; margin: 0; }
+        .cursor-dot { pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+        .noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+
+        .gallery-track { display: flex; align-items: center; height: 100vh; padding-left: 10vw; padding-right: 10vw; gap: 15vw; will-change: transform; }
+        .gallery-item { position: relative; flex-shrink: 0; }
+        .gallery-img { height: 70vh; width: auto; object-fit: cover; transition: transform 0.1s; filter: contrast(1.1); }
+        
+        /* Títulos de sección gigantes */
+        .big-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 15vh;
+            line-height: 0.8;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            white-space: nowrap;
+            position: absolute;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.5s;
+        }
+        .gallery-item:hover .big-text { color: white; opacity: 0.1; }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+    
+    <a href="gallery1.html" class="fixed top-8 left-8 z-[60] text-xs font-mono tracking-[0.3em] uppercase hover:text-red-500 transition mix-blend-difference">&larr; Back</a>
+    <div class="fixed bottom-0 left-0 h-1 bg-white z-[70]" id="progress-bar" style="width: 0%"></div>
+
+    <main class="gallery-track" id="track">
+
+        <div class="gallery-item group relative">
+            <h2 class="big-text">SPRING</h2>
+            <img src="https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?q=80&w=2070&auto=format&fit=crop" class="gallery-img aspect-[2/3]" alt="Fashion 1">
+            <span class="absolute bottom-[-40px] left-0 font-mono text-[10px]">LOOK 01 / MILAN</span>
+        </div>
+
+        <div class="gallery-item group relative">
+            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2020&auto=format&fit=crop" class="gallery-img aspect-[2/3]" alt="Fashion 2">
+             <span class="absolute bottom-[-40px] left-0 font-mono text-[10px]">LOOK 02 / PARIS</span>
+        </div>
+
+        <div class="gallery-item group relative">
+            <h2 class="big-text">SUMMER</h2>
+            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop" class="gallery-img aspect-[9/16]" alt="Fashion 3"> <span class="absolute bottom-[-40px] left-0 font-mono text-[10px]">LOOK 03 / TOKYO</span>
+        </div>
+
+        <div class="gallery-item group relative">
+            <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=2073&auto=format&fit=crop" class="gallery-img aspect-[2/3]" alt="Fashion 4">
+             <span class="absolute bottom-[-40px] left-0 font-mono text-[10px]">LOOK 04 / NY</span>
+        </div>
+
+        <div class="flex items-center justify-center h-[70vh] w-[20vw]">
+            <span class="font-serif italic text-2xl text-white/50">End of Collection</span>
+        </div>
+
+    </main>
+
+    <script>
+        // CURSOR & SCROLL (Igual a la Gallery 2)
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', e => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+
+        const track = document.getElementById('track');
+        const progressBar = document.getElementById('progress-bar');
+        let currentScroll = 0, targetScroll = 0, maxScroll = track.scrollWidth - window.innerWidth;
+
+        window.addEventListener('resize', () => maxScroll = track.scrollWidth - window.innerWidth);
+        window.addEventListener('wheel', (e) => {
+            targetScroll += e.deltaY;
+            targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
+            e.preventDefault(); 
+        }, { passive: false });
+
+        function animate() {
+            currentScroll += (targetScroll - currentScroll) * 0.08;
+            track.style.transform = `translateX(-${currentScroll}px)`;
+            
+            const skew = (targetScroll - currentScroll) * 0.15;
+            document.querySelectorAll('.gallery-img').forEach(img => img.style.transform = `skewX(${-Math.max(Math.min(skew, 5), -5)}deg)`);
+
+            progressBar.style.width = `${(currentScroll / maxScroll) * 100}%`;
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>

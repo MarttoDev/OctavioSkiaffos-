@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GALLERY | OCTAVIOSKIAFFOS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Codystar&family=Doto:wght@100..900&family=Kantumruy+Pro:wght@100..700&family=Libre+Barcode+39+Extended+Text&family=Mingzat&family=Montserrat:wght@100..900&family=Narnoor&family=Plus+Jakarta+Sans:wght@200..800&family=Poppins:wght@100..900&family=Roboto:wght@100..900&family=Thasadith:wght@400;700&family=Work+Sans:wght@100..900&family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+        
+    <style>
+        /* CSS Base igual al index */
+        body { cursor: none; background-color: black; color: white; }
+        
+        .cursor-dot {
+            pointer-events: none; z-index: 9999; mix-blend-mode: difference;
+            transition: opacity 0.3s ease, transform 0.1s ease;
+        }
+
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 50; opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Tipografía gigante para los títulos */
+        .project-title {
+            font-family: 'Zen Kaku Gothic Antique', sans-serif;
+            font-weight: 900; /* El peso máximo se ve brutalista y moderno */
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            transition: transform 0.4s ease, opacity 0.4s ease, letter-spacing 0.3s ease;
+        }
+        
+        .project-item:hover .project-title {
+                    transform: translateX(30px); 
+                    letter-spacing: 0.50em; 
+                    color: #ffffff;
+            
+        }
+
+        .project-list:hover .project-item:not(:hover) {
+        opacity: 0.0; /* Se vuelven muy transparentes */
+        transition: all 0.1s ease;
+        }
+
+        /* Imágenes de fondo */
+        .bg-image {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0; /* Invisibles por defecto */
+            transition: opacity 0.4s ease, transform 6s ease-out;
+            z-index: 1; /* Detrás del texto */
+            pointer-events: none;
+            transform: scale(1.1); /* Empiezan un poco grandes */
+        }
+        
+        /* Clase para mostrar la imagen */
+        .bg-image.active {
+            opacity: 0.6; /* No totalmente opacas para leer el texto */
+            transform: scale(1); /* Efecto zoom out sutil */
+        }
+    </style>
+</head>
+<body class="overflow-hidden selection:bg-red-600 selection:text-white">
+
+    <div class="noise"></div>
+    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+
+    <a href="index.html" class="fixed top-8 left-8 z-[60] text-xs font-mono tracking-[0.3em] text-white/50 hover:text-white transition uppercase mix-blend-difference">
+        &larr; Home
+    </a>
+
+    <div id="bg-container">
+        <img src="IMG/paloma_mami/130.jpeg" 
+             id="img-1" class="bg-image" alt="Background Saramalacara">
+        
+        <img src="IMG/doslobos/112.jpeg" 
+             id="img-2" class="bg-image" alt="Background Revista">
+        
+        <img src="IMG/20s/99.jpg" 
+             id="img-3" class="bg-image" alt="Background Paloma">
+             
+        <img src="IMG/editorial/28.jpg" 
+             id="img-4" class="bg-image" alt="Background Archive">
+    </div>
+
+<main class="relative z-50 h-screen flex flex-col justify-center px-4 md:px-20">
+        <ul class="project-list flex flex-col space-y-2 md:space-y-0">
+            
+            <li class="project-item group py-4 border-b border-white/10 md:border-none" data-img="img-1">
+                <a href="commissions.html" class="block w-full">
+                    <div class="flex items-baseline justify-between mix-blend-difference">
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block">01</span>
+                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter">
+                            Commissions
+                        </h2>
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition ml-auto">2024 / PORTRAIT</span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="project-item group py-4 border-b border-white/10 md:border-none" data-img="img-2">
+                <a href="fashion.html" class="block w-full">
+                    <div class="flex items-baseline justify-between mix-blend-difference">
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block">02</span>
+                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter">
+                            Fashion
+                        </h2>
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition ml-auto">2025 / FASHION</span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="project-item group py-4 border-b border-white/10 md:border-none" data-img="img-3">
+                <a href="playground.html" class="block w-full">
+                    <div class="flex items-baseline justify-between mix-blend-difference">
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block">03</span>
+                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter">
+                            Playground
+                        </h2>
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition ml-auto">2023 / MUSIC</span>
+                    </div>
+                </a>
+            </li>
+
+            <li class="project-item group py-4 md:border-none" data-img="img-4">
+                <a href="editorial.html" class="block w-full">
+                    <div class="flex items-baseline justify-between mix-blend-difference">
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block">04</span>
+                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter">
+                            Editorial
+                        </h2>
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition ml-auto">2020—2023</span>
+                    </div>
+                </a>
+            </li>
+
+        </ul>
+    </main>
+
+    <script>
+        // --- LÓGICA DEL CURSOR (IGUAL AL INDEX) ---
+        const cursor = document.getElementById('cursor');
+        
+        const moveCursor = (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        }
+        document.addEventListener('mousemove', moveCursor);
+        document.addEventListener('mouseleave', () => cursor.classList.add('opacity-0'));
+        document.addEventListener('mouseenter', () => cursor.classList.remove('opacity-0'));
+
+        // --- LÓGICA DE LA GALERÍA (HOVER REVEAL) ---
+        const projectItems = document.querySelectorAll('.project-item');
+        const bgImages = document.querySelectorAll('.bg-image');
+
+        projectItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                // 1. Obtener qué imagen corresponde a este texto
+                const imgId = item.getAttribute('data-img');
+                const targetImg = document.getElementById(imgId);
+
+                // 2. Apagar todas las imágenes
+                bgImages.forEach(img => img.classList.remove('active'));
+
+                // 3. Encender solo la correcta
+                if (targetImg) {
+                    targetImg.classList.add('active');
+                }
+            });
+
+            // Opcional: Si quieres que al sacar el mouse se vuelva todo negro
+            item.addEventListener('mouseleave', () => {
+                 bgImages.forEach(img => img.classList.remove('active'));
+            });
+        });
+
+    </script>
+</body>
+</html>

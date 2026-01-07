@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMMISSIONS | OCTAVIOSKIAFFOS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background-color: #050505; color: white; cursor: none; }
+        .cursor-dot { pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+        .noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+
+        /* EFECTO DE HOVER */
+        .work-card img {
+            filter: grayscale(100%);
+            transition: filter 0.5s ease, transform 0.7s ease;
+        }
+        .work-card:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.02);
+        }
+        
+        /* METADATOS TÉCNICOS */
+        .meta-tag {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+        .work-card:hover .meta-tag {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="selection:bg-white selection:text-black">
+    <div class="noise"></div>
+    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2 transition-all duration-100 ease-out"></div>
+
+    <nav class="fixed top-0 w-full p-8 flex justify-between items-center z-50 mix-blend-difference">
+        <a href="gallery1.html" class="text-xs font-mono tracking-[0.3em] uppercase hover:text-gray-400 transition">&larr; Back</a>
+        <h1 class="text-xs font-mono tracking-[0.3em] uppercase">Commissions Index</h1>
+    </nav>
+
+    <main class="pt-32 pb-20 px-4 md:px-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-20 gap-x-8">
+            
+            <div class="work-card group relative cursor-pointer">
+                <div class="overflow-hidden mb-4 relative">
+                    <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=1887&auto=format&fit=crop" class="w-full h-[60vh] object-cover bg-gray-900">
+                    <div class="absolute bottom-4 left-4 font-mono text-[10px] text-white space-y-1">
+                        <p class="meta-tag">CAM: SONY A7III</p>
+                        <p class="meta-tag delay-75">ISO: 400</p>
+                        <p class="meta-tag delay-100">LIGHT: STROBE</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end border-t border-white/20 pt-4">
+                    <h3 class="text-2xl font-serif italic">Adidas Originals</h3>
+                    <span class="text-xs font-mono text-gray-500">2024</span>
+                </div>
+            </div>
+
+            <div class="work-card group relative cursor-pointer mt-0 md:mt-20"> <div class="overflow-hidden mb-4 relative">
+                    <img src="https://images.unsplash.com/photo-1617385987796-0370d67498c8?q=80&w=1887&auto=format&fit=crop" class="w-full h-[60vh] object-cover bg-gray-900">
+                     <div class="absolute bottom-4 left-4 font-mono text-[10px] text-white space-y-1">
+                        <p class="meta-tag">CAM: LEICA Q2</p>
+                        <p class="meta-tag delay-75">ISO: 800</p>
+                        <p class="meta-tag delay-100">LIGHT: NATURAL</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end border-t border-white/20 pt-4">
+                    <h3 class="text-2xl font-serif italic">Yves Saint Laurent</h3>
+                    <span class="text-xs font-mono text-gray-500">2025</span>
+                </div>
+            </div>
+
+            <div class="work-card group relative cursor-pointer">
+                <div class="overflow-hidden mb-4 relative">
+                    <img src="https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1886&auto=format&fit=crop" class="w-full h-[60vh] object-cover bg-gray-900">
+                     <div class="absolute bottom-4 left-4 font-mono text-[10px] text-white space-y-1">
+                        <p class="meta-tag">CAM: MAMIYA RZ67</p>
+                        <p class="meta-tag delay-75">FILM: PORTRA 400</p>
+                        <p class="meta-tag delay-100">LIGHT: STUDIO</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end border-t border-white/20 pt-4">
+                    <h3 class="text-2xl font-serif italic">GQ Magazine</h3>
+                    <span class="text-xs font-mono text-gray-500">2023</span>
+                </div>
+            </div>
+
+             <div class="work-card group relative cursor-pointer md:mt-[-100px]"> <div class="overflow-hidden mb-4 relative">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2020&auto=format&fit=crop" class="w-full h-[50vh] object-cover bg-gray-900">
+                    <div class="absolute bottom-4 left-4 font-mono text-[10px] text-white space-y-1">
+                        <p class="meta-tag">CAM: SONY A7III</p>
+                        <p class="meta-tag delay-75">ISO: 1600</p>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end border-t border-white/20 pt-4">
+                    <h3 class="text-2xl font-serif italic">Zara Campaign</h3>
+                    <span class="text-xs font-mono text-gray-500">2024</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // CURSOR
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+    </script>
+</body>
+</html>
