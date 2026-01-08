@@ -5,114 +5,277 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COMMISSIONS | OCTAVIOSKIAFFOS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+        
     <style>
-        body { background-color: #050505; color: white; cursor: none; }
-        .cursor-dot { pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
-        .noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
-
-        /* EFECTO DE HOVER */
-        .work-card img {
-            filter: grayscale(100%);
-            transition: filter 0.5s ease, transform 0.7s ease;
+        body { cursor: none; background-color: black; color: white; overflow-x: hidden; }
+        
+        /* Cursor y Ruido (Igual que en Index) */
+        .cursor-dot {
+            pointer-events: none; z-index: 9999; mix-blend-mode: difference;
+            transition: opacity 0.3s ease, transform 0.1s ease;
         }
-        .work-card:hover img {
-            filter: grayscale(0%);
-            transform: scale(1.02);
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 50; opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* --- ESTILOS MENU PS4 --- */
+        
+        /* Contenedor de Álbumes (Scroll Horizontal Invisible) */
+        .albums-container {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .albums-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        /* Títulos de Álbumes */
+        .album-title {
+            font-family: 'Zen Kaku Gothic Antique', sans-serif;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            white-space: nowrap;
+            opacity: 0.4;
+            transform: scale(0.9);
+            cursor: pointer;
         }
         
-        /* METADATOS TÉCNICOS */
-        .meta-tag {
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.4s ease;
-        }
-        .work-card:hover .meta-tag {
+        /* Estado Activo del Álbum */
+        .album-title.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: scale(1.1);
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+            font-weight: 900;
+        }
+
+        /* Fondo Dinámico */
+        .bg-dynamic {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: -1;
+            transition: opacity 0.6s ease;
+            opacity: 0;
+            filter: blur(20px) brightness(0.8); /* Efecto blur claro */
+            transform: scale(1.1);
+        }
+        .bg-dynamic.active { opacity: 1; }
+
+        /* Animación de entrada para las fotos */
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .photo-entry {
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0; /* Empiezan invisibles */
         }
     </style>
 </head>
-<body class="selection:bg-white selection:text-black">
+<body class="selection:bg-white selection:text-black min-h-screen flex flex-col">
+
     <div class="noise"></div>
-    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2 transition-all duration-100 ease-out"></div>
+    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+    
+    <a href="gallery1.html" class="fixed top-8 left-8 z-[60] text-xs font-mono tracking-[0.3em] text-white/50 hover:text-white transition uppercase mix-blend-difference">
+        &larr; Back
+    </a>
 
-    <nav class="fixed top-0 w-full p-8 flex justify-between items-center z-50 mix-blend-difference">
-        <a href="gallery1.html" class="text-xs font-mono tracking-[0.3em] uppercase hover:text-gray-400 transition">&larr; Back</a>
-        <h1 class="text-xs font-mono tracking-[0.3em] uppercase">Commissions Index</h1>
-    </nav>
-
-    <main class="pt-32 pb-20 px-4 md:px-12">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-20 gap-x-8">
-            
-            <div class="work-card group relative cursor-pointer">
-                <div class="overflow-hidden mb-4 relative">
-                    <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=1887&auto=format&fit=crop" class="w-full h-[60vh] object-cover bg-gray-900">
-                    <div class="absolute bottom-4 left-4 font-mono text-[10px] text-white space-y-1">
-                        <p class="meta-tag">CAM: SONY A7III</p>
-                        <p class="meta-tag delay-75">ISO: 400</p>
-                        <p class="meta-tag delay-100">LIGHT: STROBE</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-end border-t border-white/20 pt-4">
-                    <h3 class="text-2xl font-serif italic">Adidas Originals</h3>
-                    <span class="text-xs font-mono text-gray-500">2024</span>
-                </div>
-            </div>
-
-            <div class="work-card group relative cursor-pointer mt-0 md:mt-20"> <div class="overflow-hidden mb-4 relative">
-                    <img src="https://images.unsplash.com/photo-1617385987796-0370d67498c8?q=80&w=1887&auto=format&fit=crop" class="w-full h-[60vh] object-cover bg-gray-900">
-                     <div class="absolute bottom-4 left-4 font-mono text-[10px] text-white space-y-1">
-                        <p class="meta-tag">CAM: LEICA Q2</p>
-                        <p class="meta-tag delay-75">ISO: 800</p>
-                        <p class="meta-tag delay-100">LIGHT: NATURAL</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-end border-t border-white/20 pt-4">
-                    <h3 class="text-2xl font-serif italic">Yves Saint Laurent</h3>
-                    <span class="text-xs font-mono text-gray-500">2025</span>
-                </div>
-            </div>
-
-            <div class="work-card group relative cursor-pointer">
-                <div class="overflow-hidden mb-4 relative">
-                    <img src="https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1886&auto=format&fit=crop" class="w-full h-[60vh] object-cover bg-gray-900">
-                     <div class="absolute bottom-4 left-4 font-mono text-[10px] text-white space-y-1">
-                        <p class="meta-tag">CAM: MAMIYA RZ67</p>
-                        <p class="meta-tag delay-75">FILM: PORTRA 400</p>
-                        <p class="meta-tag delay-100">LIGHT: STUDIO</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-end border-t border-white/20 pt-4">
-                    <h3 class="text-2xl font-serif italic">GQ Magazine</h3>
-                    <span class="text-xs font-mono text-gray-500">2023</span>
-                </div>
-            </div>
-
-             <div class="work-card group relative cursor-pointer md:mt-[-100px]"> <div class="overflow-hidden mb-4 relative">
-                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2020&auto=format&fit=crop" class="w-full h-[50vh] object-cover bg-gray-900">
-                    <div class="absolute bottom-4 left-4 font-mono text-[10px] text-white space-y-1">
-                        <p class="meta-tag">CAM: SONY A7III</p>
-                        <p class="meta-tag delay-75">ISO: 1600</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-end border-t border-white/20 pt-4">
-                    <h3 class="text-2xl font-serif italic">Zara Campaign</h3>
-                    <span class="text-xs font-mono text-gray-500">2024</span>
-                </div>
-            </div>
-
+    <div id="bg-layer" class="fixed inset-0 z-0">
         </div>
+
+    <main class="relative z-10 w-full pt-32 pb-20 px-4 md:px-12 flex flex-col h-full">
+        
+        <div class="w-full border-b border-white/10 pb-6 mb-10">
+            <div class="flex items-baseline space-x-12 md:space-x-20 overflow-x-auto albums-container px-4" id="album-menu">
+                </div>
+        </div>
+
+        <div id="gallery-grid" class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6 w-full max-w-[1600px] mx-auto">
+            </div>
+
     </main>
 
     <script>
-        // CURSOR
+        // --- DATA DE LOS ÁLBUMES ---
+        // Aquí configuras tus carpetas y fotos
+        // 'cover': Es la foto que se verá borrosa de fondo al seleccionar el álbum
+        // 'photos': Array con las rutas de las fotos de ese álbum
+        const albumsData = [
+            {
+                id: 'paloma',
+                title: 'PALOMA MAMI',
+                cover: 'optimizadas_web/paloma_mami/130.webp', 
+                photos: [
+                    'optimizadas_web/paloma_mami/130.webp',
+                    'optimizadas_web/paloma_mami/85.webp',
+                    'optimizadas_web/paloma_mami/81.webp',
+                    'optimizadas_web/paloma_mami/80.webp',
+                    'optimizadas_web/paloma_mami/79.webp',
+                    'optimizadas_web/paloma_mami/58.webp'
+                ]
+            },
+            {
+                id: 'condy',
+                title: 'CONDY',
+                cover: 'optimizadas_web/condy/91.webp',
+                photos: [
+                    'optimizadas_web/condy/91.webp',
+                    'optimizadas_web/condy/92.webp',
+                    'optimizadas_web/condy/123.webp',,
+                    'optimizadas_web/condy/128.webp',,
+                    'optimizadas_web/condy/131.webp',,
+                    'optimizadas_web/condy/133.webp',,
+                ]
+            },
+            {
+                id: 'artist3',
+                title: 'SARAMALACARA', // Nombre ejemplo
+                cover: 'optimizadas_web/saramalacara/64.webp',
+                photos: [
+                    'optimizadas_web/saramalacara/63.webp',
+                    'optimizadas_web/saramalacara/64.webp',
+                    'optimizadas_web/saramalacara/65.webp',
+                    'optimizadas_web/saramalacara/66.webp',
+                    'optimizadas_web/saramalacara/67.webp',
+                    'optimizadas_web/saramalacara/68.webp',
+                    'optimizadas_web/saramalacara/69.webp',
+                    'optimizadas_web/saramalacara/70.webp',
+                    'optimizadas_web/saramalacara/71.webp',
+                    'optimizadas_web/saramalacara/72.webp',
+                    'optimizadas_web/saramalacara/73.webp',
+                    'optimizadas_web/saramalacara/74.webp',
+                    'optimizadas_web/saramalacara/75.webp'
+                ]
+            },
+            {
+                id: 'artist4',
+                title: 'eq',
+                cover: 'optimizadas_web/eq/4.webp',
+                photos: [
+                    'optimizadas_web/eq/4.webp',
+                    'optimizadas_web/eq/5.webp',
+                    'optimizadas_web/eq/9.webp',
+                    'optimizadas_web/eq/11.webp',
+                    'optimizadas_web/eq/12.webp',
+                    'optimizadas_web/eq/16.webp',
+                    'optimizadas_web/eq/17.webp',
+                    'optimizadas_web/eq/46.webp',
+                    'optimizadas_web/eq/59.webp',
+                    'optimizadas_web/eq/60.webp',
+                    'optimizadas_web/eq/61.webp',
+                    'optimizadas_web/eq/62.webp',
+                    'optimizadas_web/eq/142.webp'
+                ]
+            },
+                        {
+                id: 'artist4',
+                title: 'egobloy',
+                cover: 'optimizadas_web/egobloy/113.webp',
+                photos: [
+                    'optimizadas_web/egobloy/113.webp',
+                    'optimizadas_web/egobloy/117.webp'
+                ]
+            }
+        ];
+
+        // --- REFERENCIAS DOM ---
+        const menuContainer = document.getElementById('album-menu');
+        const galleryGrid = document.getElementById('gallery-grid');
+        const bgLayer = document.getElementById('bg-layer');
+
+        let currentAlbumIndex = 0;
+
+        // --- INICIALIZACIÓN ---
+        function init() {
+            renderMenu();
+            loadAlbum(0); // Cargar el primero por defecto
+        }
+
+        // 1. Renderizar Menú Superior
+        function renderMenu() {
+            menuContainer.innerHTML = '';
+            albumsData.forEach((album, index) => {
+                const titleBtn = document.createElement('button');
+                titleBtn.innerText = album.title;
+                titleBtn.className = `album-title text-2xl md:text-5xl uppercase tracking-tighter ${index === 0 ? 'active' : ''}`;
+                
+                // Evento Click
+                titleBtn.onclick = () => {
+                    updateActiveButton(index);
+                    loadAlbum(index);
+                };
+
+                menuContainer.appendChild(titleBtn);
+            });
+        }
+
+        // 2. Actualizar estilos del botón
+        function updateActiveButton(index) {
+            const buttons = document.querySelectorAll('.album-title');
+            buttons.forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // 3. Cargar Álbum (Fondo + Fotos)
+        function loadAlbum(index) {
+            const album = albumsData[index];
+
+            // A. Cambiar Fondo (Efecto Fade)
+            // Creamos una nueva imagen encima, esperamos que cargue, y borramos la vieja
+            const newBg = document.createElement('img');
+            newBg.src = album.cover;
+            newBg.className = 'bg-dynamic active';
+            
+            // Limpiar fondo anterior suavemente
+            const oldBg = bgLayer.querySelector('img');
+            if (oldBg) {
+                oldBg.classList.remove('active');
+                setTimeout(() => oldBg.remove(), 600); // Esperar que termine la transición CSS
+            }
+            bgLayer.appendChild(newBg);
+
+            // B. Cargar Grilla de Fotos
+            galleryGrid.innerHTML = ''; // Limpiar grilla
+            
+            album.photos.forEach((photoSrc, i) => {
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'photo-entry mb-6 break-inside-avoid';
+                
+                // Delay escalonado para efecto cascada (stagger)
+                imgContainer.style.animationDelay = `${i * 0.1}s`;
+
+                const img = document.createElement('img');
+                img.src = photoSrc;
+                img.className = 'w-full h-auto';
+                img.alt = album.title;
+                
+                // Opcional: Click para lightbox (podemos agregarlo luego)
+                
+                imgContainer.appendChild(img);
+                galleryGrid.appendChild(imgContainer);
+            });
+        }
+
+        // --- LÓGICA CURSOR ---
         const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', e => {
+        const moveCursor = (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
-        });
+        }
+        document.addEventListener('mousemove', moveCursor);
+
+        // Arrancar
+        init();
+
     </script>
 </body>
 </html>

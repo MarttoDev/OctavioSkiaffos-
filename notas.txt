@@ -2,13 +2,25 @@ CAMBIOS
 
 
 ** Gallery
-- centrar foto palomamami comissions
-- quitar zoom indice 1 2 3 - 4no 
-- movimiento letas en bloque no espaciado
+- centrar foto palomamami comissions ----> se quitó algo de zoom y se aceleró el efecto, no se puede quitar mas zoom por el tamaño de la foto
+- quitar zoom indice 1 2 3 - 4no ----> se quitó algo de zoom y se aceleró el efecto, no se puede quitar mas zoom por el tamaño de la foto
 
 ** MAIN
 - linkear redes
 - cambiar contacto
 - linkear mi pagina
-- nav quitar italic y subrayado
 
+
+optimizadas:
+
+- editorial
+- 20s
+- condy
+- eq
+- perkinboy
+- palomamami
+- saramalacara
+- sa
+- lesang
+- joia 
+- doslobos

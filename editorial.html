@@ -5,58 +5,291 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EDITORIAL | OCTAVIOSKIAFFOS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Zen+Kaku+Gothic+Antique:wght@300;400;700;900&display=swap" rel="stylesheet">
+        
     <style>
-        body { background-color: #000; color: white; margin: 0; cursor: none; }
-        .cursor-dot { pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
-        .noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        /* --- BASE --- */
+        html, body {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: #050505;
+            color: white;
+            overflow: hidden; /* IMPORTANTE: Sin scroll nativo */
+            cursor: none;
+        }
 
-        .section { position: sticky; top: 0; height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 -10px 50px rgba(0,0,0,0.8); }
-        .section-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); transition: all 0.7s ease; transform: scale(1.1); }
-        .section:hover .section-img { filter: brightness(0.9); transform: scale(1); }
-        .content { position: relative; z-index: 10; text-align: center; pointer-events: none; }
-        .big-title { font-family: 'Playfair Display', serif; font-size: 6vw; font-style: italic; opacity: 0; transform: translateY(50px); transition: all 0.8s ease; }
-        .section:hover .big-title { opacity: 1; transform: translateY(0); }
+        /* --- CONTENEDOR MAESTRO --- */
+        .film-container {
+            position: fixed;
+            top: 50%; left: 50%;
+            /* Escalamos un poco más para cubrir bordes al rotar */
+            transform: translate(-50%, -50%) rotate(-15deg) scale(1.4);
+            width: 140vw; /* Más ancho para caber más columnas */
+            height: 150vh;
+            display: flex;
+            justify-content: center;
+            gap: 1.5vw; /* Gap más pequeño */
+            will-change: transform;
+            pointer-events: none; 
+        }
+
+        /* --- COLUMNAS --- */
+        .film-strip {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vw;
+            width: 9vw; /* FOTOS MUCHO MÁS CHICAS (Antes 20vw) */
+            will-change: transform;
+            padding-bottom: 1.5vw; 
+        }
+
+        /* --- LAS FOTOS --- */
+        .film-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2/3; 
+            overflow: hidden;
+            background: #111;
+            cursor: none;
+            pointer-events: auto;
+            flex-shrink: 0; 
+        }
+        
+        .film-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: filter 0.3s ease, transform 0.3s ease;
+        }
+
+        .film-frame:hover .film-img {
+            transform: scale(1.1);
+        }
+
+        /* --- LIGHTBOX --- */
+        .lightbox {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.95);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0; 
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .lightbox.active { opacity: 1; pointer-events: auto; }
+
+        .lightbox-img {
+            max-width: 85vw; max-height: 85vh;
+            object-fit: contain;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .lightbox.active .lightbox-img { transform: scale(1); }
+
+        .close-btn {
+            position: absolute; top: 40px; right: 40px;
+            font-family: 'Zen Kaku Gothic Antique', sans-serif;
+            font-size: 1.2rem; color: white; cursor: pointer; z-index: 101;
+            border: 1px solid white; padding: 5px 15px; border-radius: 50px;
+            transition: all 0.3s;
+        }
+        .close-btn:hover { background: white; color: black; }
+
+        /* --- CURSOR --- */
+        .cursor-dot {
+            pointer-events: none; z-index: 9999; mix-blend-mode: difference;
+            background-color: white;
+            transition: width 0.3s, height 0.3s, opacity 0.3s;
+        }
+        .cursor-text {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 10px; font-family: monospace; color: black; opacity: 0; font-weight: bold;
+        }
     </style>
 </head>
-<body>
-    <div class="noise"></div>
-    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
-    <a href="gallery1.html" class="fixed top-8 left-8 z-[60] text-xs font-mono tracking-[0.3em] uppercase text-white hover:text-red-500 transition mix-blend-difference">&larr; Back</a>
+<body class="selection:bg-white selection:text-black">
 
-    <section class="section bg-zinc-900">
-        <img src="https://images.unsplash.com/photo-1493863641943-9b68992a8d07?q=80&w=2058&auto=format&fit=crop" class="section-img">
-        <div class="content">
-            <span class="block text-xs font-mono tracking-widest text-red-500 mb-4">ISSUE 01</span>
-            <h2 class="big-title">The Beginning</h2>
-            <p class="mt-4 max-w-md mx-auto text-sm text-gray-300 font-light">Donde todo comenzó. Una narrativa sobre la soledad moderna.</p>
+    <div id="cursor" class="cursor-dot fixed w-4 h-4 rounded-full transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+        <span class="cursor-text">OPEN</span>
+    </div>
+    
+    <a href="gallery1.html" class="fixed top-8 left-8 z-[60] text-xs font-mono tracking-[0.3em] text-white/80 hover:text-white transition uppercase mix-blend-difference bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm">
+        &larr; Back
+    </a>
+
+    <div class="film-container">
+        
+        <div class="film-strip" data-speed="1.2" data-direction="1">
+            <div class="film-frame"><img src="optimizadas_web/editorial/28.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/86.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/87.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/88.webp" class="film-img"></div>
         </div>
-    </section>
 
-    <section class="section bg-zinc-800">
-        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop" class="section-img">
-        <div class="content">
-            <span class="block text-xs font-mono tracking-widest text-red-500 mb-4">ISSUE 02</span>
-            <h2 class="big-title">Raw Emotion</h2>
+        <div class="film-strip" data-speed="0.9" data-direction="-1">
+            <div class="film-frame"><img src="optimizadas_web/editorial/89.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/90.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/110.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/114.webp" class="film-img"></div>
         </div>
-    </section>
 
-    <section class="section bg-zinc-700">
-        <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=2070&auto=format&fit=crop" class="section-img">
-        <div class="content">
-            <span class="block text-xs font-mono tracking-widest text-red-500 mb-4">ISSUE 03</span>
-            <h2 class="big-title">Film Noir</h2>
+        <div class="film-strip" data-speed="1.5" data-direction="1">
+            <div class="film-frame"><img src="optimizadas_web/editorial/118.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/119.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/121.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/124.webp" class="film-img"></div>
         </div>
-    </section>
 
-    <div class="h-[50vh] bg-black flex items-center justify-center relative z-20">
-        <p class="text-xs font-mono text-gray-500 tracking-widest">END OF STORY</p>
+        <div class="film-strip" data-speed="1.1" data-direction="-1">
+            <div class="film-frame"><img src="optimizadas_web/editorial/125.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/127.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/129.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/134.webp" class="film-img"></div>
+        </div>
+
+        <div class="film-strip" data-speed="1.3" data-direction="1">
+            <div class="film-frame"><img src="optimizadas_web/editorial/135.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/136.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/137.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/140.webp" class="film-img"></div>
+        </div>
+
+        <div class="film-strip" data-speed="0.8" data-direction="-1">
+            <div class="film-frame"><img src="optimizadas_web/editorial/141.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/144.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/145.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/146.webp" class="film-img"></div>
+        </div>
+
+        <div class="film-strip" data-speed="1.4" data-direction="1">
+            <div class="film-frame"><img src="optimizadas_web/editorial/147.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/148.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/149.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/150.webp" class="film-img"></div>
+        </div>
+
+         <div class="film-strip" data-speed="1.0" data-direction="-1">
+            <div class="film-frame"><img src="optimizadas_web/editorial/28.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/134.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/90.webp" class="film-img"></div>
+            <div class="film-frame"><img src="optimizadas_web/editorial/141.webp" class="film-img"></div>
+        </div>
+
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <div class="close-btn" id="close-lightbox">CLOSE</div>
+        <img src="" class="lightbox-img" id="lightbox-img" alt="Zoom">
     </div>
 
     <script>
+        // --- 1. CLONACIÓN AUTOMÁTICA (Para el Loop Infinito) ---
+        const strips = document.querySelectorAll('.film-strip');
+        
+        strips.forEach(strip => {
+            // Clonamos 3 veces para asegurar que en pantallas grandes y con items pequeños no se vea corte
+            const content = strip.innerHTML;
+            strip.innerHTML = content + content + content + content; 
+        });
+
+
+        // --- 2. LÓGICA DE ESCALERA MECÁNICA (Loop Infinito) ---
+        let virtualScroll = 0; 
+        let targetScroll = 0;
+        const ease = 0.08;
+        
+        window.addEventListener('wheel', (e) => {
+            targetScroll += e.deltaY;
+        });
+
+        function animate() {
+            virtualScroll += (targetScroll - virtualScroll) * ease;
+
+            strips.forEach(strip => {
+                const speed = parseFloat(strip.getAttribute('data-speed'));
+                const direction = parseFloat(strip.getAttribute('data-direction')); 
+                
+                let pos = virtualScroll * speed * direction;
+
+                // Dividimos por 4 porque cuadruplicamos el contenido
+                const stripHeight = strip.scrollHeight / 4;
+
+                const wrappedPos = ((pos % stripHeight) + stripHeight) % stripHeight;
+                const finalPos = wrappedPos - stripHeight; 
+
+                strip.style.transform = `translateY(${finalPos}px)`;
+            });
+
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+
+
+        // --- 3. LÓGICA LIGHTBOX ---
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const closeBtn = document.getElementById('close-lightbox');
+        
+        document.querySelector('.film-container').addEventListener('click', (e) => {
+            const frame = e.target.closest('.film-frame');
+            if (frame) {
+                const img = frame.querySelector('img');
+                lightboxImg.src = img.src;
+                lightbox.classList.add('active');
+            }
+        });
+
+        const closeLightbox = () => lightbox.classList.remove('active');
+        closeBtn.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+
+        // --- 4. CURSOR ---
         const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', e => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+        const cursorText = document.querySelector('.cursor-text');
+        
+        window.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.querySelector('.film-container').addEventListener('mouseover', (e) => {
+            if (e.target.closest('.film-frame')) {
+                cursor.style.transform = "translate(-50%, -50%) scale(4)";
+                cursor.style.mixBlendMode = "normal";
+                cursorText.style.opacity = "1";
+            }
+        });
+        document.querySelector('.film-container').addEventListener('mouseout', (e) => {
+             if (e.target.closest('.film-frame')) {
+                cursor.style.transform = "translate(-50%, -50%) scale(1)";
+                cursor.style.mixBlendMode = "difference";
+                cursorText.style.opacity = "0";
+             }
+        });
+
+        closeBtn.addEventListener('mouseenter', () => {
+             cursor.style.transform = "translate(-50%, -50%) scale(3)";
+             cursor.style.backgroundColor = "red";
+             cursorText.style.opacity = "0";
+        });
+        closeBtn.addEventListener('mouseleave', () => {
+             cursor.style.transform = "translate(-50%, -50%) scale(1)";
+             cursor.style.backgroundColor = "white";
+        });
+
     </script>
 </body>
 </html>

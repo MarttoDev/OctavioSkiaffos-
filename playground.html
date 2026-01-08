@@ -5,74 +5,239 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLAYGROUND | OCTAVIOSKIAFFOS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Zen+Kaku+Gothic+Antique:wght@300;400;700;900&display=swap" rel="stylesheet">
+        
     <style>
-        body { background-color: #0a0a0a; color: white; cursor: none; overflow: hidden; height: 100vh; width: 100vw; user-select: none; }
-        .cursor-dot { pointer-events: none; z-index: 9999; mix-blend-mode: difference; transition: transform 0.1s; }
-        body.is-dragging .cursor-dot { transform: translate(-50%, -50%) scale(3); background-color: red; mix-blend-mode: normal; opacity: 0.5; }
-        .noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        /* --- BASE --- */
+        html, body {
+            margin: 0; padding: 0;
+            width: 100%; 
+            /* El alto se definirá dinámicamente con JS para crear la barra de scroll */
+            background-color: black;
+            color: white;
+            cursor: none; 
+            overflow-x: hidden;
+        }
 
-        #canvas { position: absolute; top: 0; left: 0; width: 300vw; height: 300vh; transform: translate(-30%, -30%); will-change: transform; cursor: none; }
-        .photo-card { position: absolute; transition: transform 0.3s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .photo-card:hover { z-index: 40; transform: scale(1.1) !important; filter: brightness(1.2); }
+        /* --- CONTENEDOR FIJO (LA PANTALLA QUE VEMOS) --- */
+        .fixed-viewport {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            display: flex;
+            overflow: hidden; /* Ocultamos lo que se sale por arriba/abajo */
+        }
+
+        /* --- LAS DOS COLUMNAS --- */
+        .col-left, .col-right {
+            width: 50%;
+            position: absolute;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            will-change: transform; /* Optimización de rendimiento */
+        }
+
+        .col-left {
+            left: 0;
+            /* La izquierda empieza arriba (top: 0) y sube */
+        }
+
+        .col-right {
+            right: 0;
+            /* La derecha se posicionará vía JS para empezar desde abajo */
+        }
+
+        /* --- LA FOTO --- */
+        .grid-item {
+            position: relative;
+            width: 100%;
+            /* Altura de cada foto (ajusta si quieres más/menos fotos por pantalla) */
+            height: 60vh; 
+            overflow: hidden;
+        }
+
+        .grid-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* --- OVERLAY TEXTO --- */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .project-title {
+            font-family: 'Zen Kaku Gothic Antique', sans-serif;
+            font-weight: 900;
+            font-size: 2vw;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transform: translateY(30px);
+            transition: transform 0.4s ease;
+        }
+
+        /* --- HOVER --- */
+        .grid-item:hover .grid-img { transform: scale(1.05); }
+        .grid-item:hover .overlay { opacity: 1; }
+        .grid-item:hover .project-title { transform: translateY(0); }
+
+        /* --- CURSOR --- */
+        .cursor-dot {
+            pointer-events: none; z-index: 9999; mix-blend-mode: difference;
+            background-color: white;
+            transition: width 0.3s, height 0.3s, opacity 0.3s;
+        }
+
+        /* --- RESPONSIVE (CELULAR) --- */
+        /* En móvil este efecto no funciona bien, así que lo apilamos normal */
+        @media (max-width: 768px) {
+            .fixed-viewport { position: relative; height: auto; flex-direction: column; }
+            .col-left, .col-right { width: 100%; position: relative; top: auto; left: auto; right: auto; transform: none !important; }
+            .grid-item { height: 50vh; }
+        }
     </style>
 </head>
-<body>
-    <div class="noise"></div>
-    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
-    
-    <div class="fixed top-8 left-8 z-[60] pointer-events-none mix-blend-difference">
-        <a href="gallery1.html" class="pointer-events-auto text-xs font-mono tracking-[0.3em] uppercase text-white hover:text-red-500 transition">&larr; Back</a>
-    </div>
-    <div class="fixed bottom-8 right-8 z-[60] text-right pointer-events-none mix-blend-difference">
-        <p class="text-xs font-mono tracking-widest text-white">DRAG TO EXPLORE</p>
-    </div>
+<body class="selection:bg-white selection:text-black">
 
-    <div id="canvas">
-        <div class="photo-card" style="top: 20%; left: 20%; transform: rotate(-5deg); width: 20vw;">
-            <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop" class="w-full">
+    <div id="cursor" class="cursor-dot fixed w-4 h-4 rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+    
+    <a href="gallery1.html" class="fixed top-8 left-8 z-[60] text-xs font-mono tracking-[0.3em] text-white/80 hover:text-white transition uppercase mix-blend-difference bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm">
+        &larr; Back
+    </a>
+
+    <div class="fixed-viewport">
+        
+        <div class="col-left" id="col-left">
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/18.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/19.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/20.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/21.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/22.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/23.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/24.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/25.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/26.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/97.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/98.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
         </div>
-        <div class="photo-card" style="top: 40%; left: 35%; transform: rotate(10deg); width: 15vw;">
-            <img src="https://images.unsplash.com/photo-1573455494060-c5595004fb6c?q=80&w=2040&auto=format&fit=crop" class="w-full grayscale">
+
+        <div class="col-right" id="col-right">
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/99.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/100.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/101.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/102.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/103.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/104.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/105.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/106.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/107.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
+            <a href="#" class="grid-item group"><img src="optimizadas_web/20s/108.webp" class="grid-img"><div class="overlay"><h2 class="project-title">Session 01</h2></div></a>
         </div>
-        <div class="photo-card" style="top: 60%; left: 50%; transform: rotate(-8deg); width: 25vw;">
-            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop" class="w-full">
-            <h2 class="font-serif italic text-4xl absolute -top-10 -right-10 mix-blend-difference">Chaos</h2>
-        </div>
-        <div class="photo-card" style="top: 15%; left: 60%; transform: rotate(15deg); width: 18vw;">
-            <img src="https://images.unsplash.com/photo-1494232410401-ad00d5433cfa?q=80&w=2070&auto=format&fit=crop" class="w-full grayscale">
-        </div>
-        <div class="photo-card" style="top: 50%; left: 15%; transform: rotate(-15deg); width: 12vw;">
-            <img src="https://images.unsplash.com/photo-1550133730-69524bb9e487?q=80&w=2070&auto=format&fit=crop" class="w-full">
-        </div>
+
     </div>
+    
+    <div id="scroll-proxy"></div>
 
     <script>
+        // --- LOGICA BIDIRECCIONAL (Solo Desktop) ---
+        const colLeft = document.getElementById('col-left');
+        const colRight = document.getElementById('col-right');
+        const scrollProxy = document.getElementById('scroll-proxy');
+        
+        let currentScroll = 0;
+        let targetScroll = 0;
+        const ease = 0.08; // Suavidad
+
+        function init() {
+            // Solo activar en pantallas grandes
+            if (window.innerWidth > 768) {
+                // 1. Calcular altura total necesaria
+                // La altura de la columna más larga define cuanto scroll necesitamos
+                const leftHeight = colLeft.offsetHeight;
+                const rightHeight = colRight.offsetHeight;
+                const totalContentHeight = Math.max(leftHeight, rightHeight);
+                
+                // Ajustamos el div fantasma para que el navegador muestre la barra de scroll correcta
+                // El scroll total debe permitir recorrer toda la columna más larga
+                scrollProxy.style.height = totalContentHeight + 'px';
+                
+                // Empezar loop
+                animate();
+            }
+        }
+
+        function animate() {
+            // Lerp para suavidad
+            targetScroll = window.scrollY;
+            currentScroll += (targetScroll - currentScroll) * ease;
+            
+            // --- MATEMÁTICA DEL MOVIMIENTO ---
+            
+            // Columna Izquierda: Se mueve NORMAL (Sube)
+            // Simplemente la desplazamos hacia arriba según el scroll
+            const leftMove = -currentScroll;
+            
+            // Columna Derecha: Se mueve INVERTIDO (Baja)
+            // Debe empezar "escondida arriba" (o abajo, según el efecto).
+            // Para el efecto "cruce":
+            // Debe empezar en: -(AlturaTotal - AlturaPantalla) -> Es decir, mostrando el final.
+            // Y moverse hacia abajo sumando el scroll.
+            
+            const rightHeight = colRight.offsetHeight;
+            const windowHeight = window.innerHeight;
+            
+            // Posición Inicial: Alineada al fondo (scrolleada al maximo)
+            const rightStart = -(rightHeight - windowHeight);
+            
+            // Movimiento: Posición Inicial + Scroll
+            const rightMove = rightStart + currentScroll;
+
+            // Aplicar transformaciones
+            colLeft.style.transform = `translate3d(0, ${leftMove}px, 0)`;
+            colRight.style.transform = `translate3d(0, ${rightMove}px, 0)`;
+
+            requestAnimationFrame(animate);
+        }
+
+        // Iniciar y recalcular si cambian el tamaño de ventana
+        window.addEventListener('load', init);
+        window.addEventListener('resize', init);
+
+
+        // --- CURSOR ---
         const cursor = document.getElementById('cursor');
-        const moveCursor = (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; }
-        window.addEventListener('mousemove', moveCursor);
-
-        const canvas = document.getElementById('canvas');
-        let isDragging = false, startX, startY, currentX = -window.innerWidth * 0.3, currentY = -window.innerHeight * 0.3;
-
-        window.addEventListener('mousedown', (e) => {
-            if(e.target.tagName === 'A') return;
-            isDragging = true; document.body.classList.add('is-dragging');
-            startX = e.clientX; startY = e.clientY;
-        });
         window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const newX = currentX + (e.clientX - startX);
-            const newY = currentY + (e.clientY - startY);
-            canvas.style.transform = `translate(${newX}px, ${newY}px)`;
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
         });
-        window.addEventListener('mouseup', (e) => {
-            if (!isDragging) return;
-            isDragging = false; document.body.classList.remove('is-dragging');
-            currentX += (e.clientX - startX); currentY += (e.clientY - startY);
+
+        document.querySelectorAll('.grid-item').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                cursor.style.transform = "translate(-50%, -50%) scale(2.5)";
+                cursor.style.mixBlendMode = "normal";
+                cursor.style.opacity = "0.8";
+            });
+            item.addEventListener('mouseleave', () => {
+                cursor.style.transform = "translate(-50%, -50%) scale(1)";
+                cursor.style.mixBlendMode = "difference";
+                cursor.style.opacity = "1";
+            });
         });
+
     </script>
 </body>
 </html>

@@ -1,0 +1,6 @@
+# Ignorar archivos pesados
+tailwindcss.exe
+IMG/
+node_modules/
+__pycache__/
+*.pyc
