@@ -9,8 +9,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Codystar&family=Doto:wght@100..900&family=Kantumruy+Pro:wght@100..700&family=Libre+Barcode+39+Extended+Text&family=Mingzat&family=Montserrat:wght@100..900&family=Narnoor&family=Plus+Jakarta+Sans:wght@200..800&family=Poppins:wght@100..900&family=Roboto:wght@100..900&family=Thasadith:wght@400;700&family=Work+Sans:wght@100..900&family=Zen+Kaku+Gothic+Antique:wght@300;400;500;700;900&display=swap" rel="stylesheet">
         
     <style>
@@ -19,7 +17,8 @@
         
         .cursor-dot {
             pointer-events: none; z-index: 9999; mix-blend-mode: difference;
-            transition: opacity 0.3s ease, transform 0.1s ease;
+            transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease, transform 0.1s ease;
+            transform-origin: center;
         }
 
         .noise {
@@ -31,22 +30,25 @@
         /* Tipografía gigante para los títulos */
         .project-title {
             font-family: 'Zen Kaku Gothic Antique', sans-serif;
-            font-weight: 900; /* El peso máximo se ve brutalista y moderno */
+            font-weight: 900; 
             letter-spacing: 0.02em;
             text-transform: uppercase;
             transition: transform 0.4s ease, opacity 0.4s ease, letter-spacing 0.3s ease;
+            will-change: transform, letter-spacing;
         }
         
         .project-item:hover .project-title {
-                    transform: translateX(30px); 
-                    letter-spacing: 0.50em; 
-                    color: #ffffff;
-            
+            transform: translateX(30px); 
+            letter-spacing: 0.50em; 
+            color: #ffffff;
         }
 
+        /* --- CORRECCIÓN DE VELOCIDAD DE DESAPARICIÓN --- */
+        /* Opacidad 0 y tiempo muy rápido (0.1s) para que no se vea el "rastro" */
         .project-list:hover .project-item:not(:hover) {
-        opacity: 0.0; /* Se vuelven muy transparentes */
-        transition: all 0.1s ease;
+            opacity: 0 !important; 
+            filter: blur(4px); /* Aumenté un poco el blur para que se disuelva */
+            transition: opacity 0.1s ease, filter 0.1s ease; /* RAPIDÍSIMO */
         }
 
         /* Imágenes de fondo */
@@ -54,29 +56,27 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover;
-            opacity: 0; /* Invisibles por defecto */
-            transition: opacity 0.1s ease, transform 1s ease-out;
-            z-index: 1; /* Detrás del texto */
+            opacity: 0; 
+            transition: opacity 0.3s ease, transform 1s ease-out;
+            z-index: 1; 
             pointer-events: none;
-            transform: scale(1.1); /* Empiezan un poco grandes */
+            transform: scale(1.03); 
         }
 
-#img-1 {
-    border: 5px solid red !important;
-    object-position: 20% 40% !important;
-}
-        
         /* Clase para mostrar la imagen */
         .bg-image.active {
-            opacity: 0.6; /* No totalmente opacas para leer el texto */
-            transform: scale(1.01); /* Efecto zoom out sutil */
+            opacity: 0.6; 
+            transform: scale(1.01); 
         }
+        
+        /* Evitar que aparezca la manito en links */
+        a, button { cursor: none !important; }
     </style>
 </head>
 <body class="overflow-hidden selection:bg-red-600 selection:text-white">
 
     <div class="noise"></div>
-    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center"></div>
 
     <a href="index.html" class="fixed top-8 left-8 z-[60] text-xs font-mono tracking-[0.3em] text-white/50 hover:text-white transition uppercase mix-blend-difference">
         &larr; Home
@@ -84,65 +84,61 @@
 
     <div id="bg-container">
         <img src="optimizadas_web/paloma_mami/130.webp" 
-             id="img-1" class="bg-image" alt="Background Saramalacara">
+             id="img-1" class="bg-image" alt="Background Commissions">
         
         <img src="optimizadas_web/doslobos/112.webp" 
-             id="img-2" class="bg-image" alt="Background Revista">
+             id="img-2" class="bg-image" alt="Background Fashion">
         
         <img src="optimizadas_web/20s/20.webp" 
-             id="img-3" class="bg-image" alt="Background Paloma">
+             id="img-3" class="bg-image" alt="Background Playground">
              
         <img src="optimizadas_web/editorial/28.webp" 
-             id="img-4" class="bg-image" alt="Background Archive">
+             id="img-4" class="bg-image" alt="Background Editorial">
     </div>
 
-<main class="relative z-50 h-screen flex flex-col justify-center px-4 md:px-20">
+    <main class="relative z-50 h-screen flex flex-col justify-center px-4 md:px-20">
         <ul class="project-list flex flex-col space-y-2 md:space-y-0">
             
             <li class="project-item group py-4 border-b border-white/10 md:border-none" data-img="img-1">
                 <a href="commissions.html" class="block w-full">
-                    <div class="flex items-baseline justify-between mix-blend-difference">
-                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block">01</span>
-                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter">
+                    <div class="flex items-baseline justify-start mix-blend-difference">
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block w-8">01</span>
+                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter leading-none">
                             Commissions
                         </h2>
-                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition ml-auto">2024 / PORTRAIT</span>
                     </div>
                 </a>
             </li>
 
             <li class="project-item group py-4 border-b border-white/10 md:border-none" data-img="img-2">
                 <a href="fashion.html" class="block w-full">
-                    <div class="flex items-baseline justify-between mix-blend-difference">
-                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block">02</span>
-                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter">
+                    <div class="flex items-baseline justify-start mix-blend-difference">
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block w-8">02</span>
+                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter leading-none">
                             Fashion
                         </h2>
-                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition ml-auto">2025 / FASHION</span>
                     </div>
                 </a>
             </li>
 
             <li class="project-item group py-4 border-b border-white/10 md:border-none" data-img="img-3">
                 <a href="playground.html" class="block w-full">
-                    <div class="flex items-baseline justify-between mix-blend-difference">
-                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block">03</span>
-                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter">
+                    <div class="flex items-baseline justify-start mix-blend-difference">
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block w-8">03</span>
+                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter leading-none">
                             Playground
                         </h2>
-                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition ml-auto">2023 / MUSIC</span>
                     </div>
                 </a>
             </li>
 
             <li class="project-item group py-4 md:border-none" data-img="img-4">
                 <a href="editorial.html" class="block w-full">
-                    <div class="flex items-baseline justify-between mix-blend-difference">
-                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block">04</span>
-                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter">
+                    <div class="flex items-baseline justify-start mix-blend-difference">
+                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition mr-8 hidden md:inline-block w-8">04</span>
+                        <h2 class="project-title text-5xl md:text-8xl lg:text-9xl text-white uppercase tracking-tighter leading-none">
                             Editorial
                         </h2>
-                        <span class="text-xs font-mono text-gray-400 group-hover:text-white transition ml-auto">2020—2023</span>
                     </div>
                 </a>
             </li>
@@ -151,7 +147,7 @@
     </main>
 
     <script>
-        // --- LÓGICA DEL CURSOR (IGUAL AL INDEX) ---
+        // --- LÓGICA DEL CURSOR ---
         const cursor = document.getElementById('cursor');
         
         const moveCursor = (e) => {
@@ -168,25 +164,22 @@
 
         projectItems.forEach(item => {
             item.addEventListener('mouseenter', () => {
-                // 1. Obtener qué imagen corresponde a este texto
                 const imgId = item.getAttribute('data-img');
                 const targetImg = document.getElementById(imgId);
 
-                // 2. Apagar todas las imágenes
+                // Apagar todas
                 bgImages.forEach(img => img.classList.remove('active'));
 
-                // 3. Encender solo la correcta
+                // Encender la correcta
                 if (targetImg) {
                     targetImg.classList.add('active');
                 }
             });
 
-            // Opcional: Si quieres que al sacar el mouse se vuelva todo negro
             item.addEventListener('mouseleave', () => {
                  bgImages.forEach(img => img.classList.remove('active'));
             });
         });
-
     </script>
 </body>
 </html>

@@ -82,7 +82,7 @@
     <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
     
     <a href="gallery1.html" class="fixed top-8 left-8 z-[60] text-xs font-mono tracking-[0.3em] text-white/50 hover:text-white transition uppercase mix-blend-difference">
-        &larr; Back
+        &larr; Gallery
     </a>
 
     <div id="bg-layer" class="fixed inset-0 z-0">
@@ -102,39 +102,14 @@
 
     <script>
         // --- DATA DE LOS ÁLBUMES ---
-        // Aquí configuras tus carpetas y fotos
         // 'cover': Es la foto que se verá borrosa de fondo al seleccionar el álbum
         // 'photos': Array con las rutas de las fotos de ese álbum
+        
+        // ORDEN ACTUALIZADO: 1. Saramalacara, 2. EQ, 3. Paloma Mami, 4. Condy, 5. Egobloy
         const albumsData = [
             {
-                id: 'paloma',
-                title: 'PALOMA MAMI',
-                cover: 'optimizadas_web/paloma_mami/130.webp', 
-                photos: [
-                    'optimizadas_web/paloma_mami/130.webp',
-                    'optimizadas_web/paloma_mami/85.webp',
-                    'optimizadas_web/paloma_mami/81.webp',
-                    'optimizadas_web/paloma_mami/80.webp',
-                    'optimizadas_web/paloma_mami/79.webp',
-                    'optimizadas_web/paloma_mami/58.webp'
-                ]
-            },
-            {
-                id: 'condy',
-                title: 'CONDY',
-                cover: 'optimizadas_web/condy/91.webp',
-                photos: [
-                    'optimizadas_web/condy/91.webp',
-                    'optimizadas_web/condy/92.webp',
-                    'optimizadas_web/condy/123.webp',,
-                    'optimizadas_web/condy/128.webp',,
-                    'optimizadas_web/condy/131.webp',,
-                    'optimizadas_web/condy/133.webp',,
-                ]
-            },
-            {
                 id: 'artist3',
-                title: 'SARAMALACARA', // Nombre ejemplo
+                title: 'SARAMALACARA', 
                 cover: 'optimizadas_web/saramalacara/64.webp',
                 photos: [
                     'optimizadas_web/saramalacara/63.webp',
@@ -159,7 +134,6 @@
                 photos: [
                     'optimizadas_web/eq/4.webp',
                     'optimizadas_web/eq/5.webp',
-                    'optimizadas_web/eq/9.webp',
                     'optimizadas_web/eq/11.webp',
                     'optimizadas_web/eq/12.webp',
                     'optimizadas_web/eq/16.webp',
@@ -172,7 +146,32 @@
                     'optimizadas_web/eq/142.webp'
                 ]
             },
-                        {
+            {
+                id: 'paloma',
+                title: 'PALOMA MAMI',
+                cover: 'optimizadas_web/paloma_mami/130.webp', 
+                photos: [
+                    'optimizadas_web/paloma_mami/130.webp',
+                    'optimizadas_web/paloma_mami/85.webp',
+                    'optimizadas_web/paloma_mami/81.webp',
+                    'optimizadas_web/paloma_mami/80.webp',
+                    'optimizadas_web/paloma_mami/79.webp',
+                ]
+            },
+            {
+                id: 'condy',
+                title: 'CONDY',
+                cover: 'optimizadas_web/condy/91.webp',
+                photos: [
+                    'optimizadas_web/condy/91.webp',
+                    'optimizadas_web/condy/92.webp',
+                    'optimizadas_web/condy/123.webp',,
+                    'optimizadas_web/condy/128.webp',,
+                    'optimizadas_web/condy/131.webp',,
+                    'optimizadas_web/condy/133.webp',,
+                ]
+            },
+            {
                 id: 'artist4',
                 title: 'egobloy',
                 cover: 'optimizadas_web/egobloy/113.webp',

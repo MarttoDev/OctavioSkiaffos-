@@ -24,3 +24,16 @@ optimizadas:
 - lesang
 - joia 
 - doslobos
+
+
+feedback demo 1:
+- otto mandarme sin marca de agua 20s
+- gallery reactivo y contacto no en nav main 
+- commissions se sube al terminar efecto
+- agregar click a fotos
+- fashion sin start end --> timeline
+- descartar fotos 
+- quitar sombra en fashion
+- quitar flecha --> punto pequeño permanente en fashion
+- cambiar descripcion en texto gallery 
+- viñeta con info en playground

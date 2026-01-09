@@ -6,27 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OCTAVIOSKIAFFOS</title>
     <link href="./index.css" rel="stylesheet">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- CSS GLOBAL --- */
-        body { cursor: none; } 
+        /* --- CORRECCIÓN DE PESTAÑEO Y SALTO --- */
+        html {
+            background-color: black; 
+            scrollbar-gutter: stable; 
+        }
+
+        body { 
+            cursor: none; 
+            background-color: black;
+            overflow-x: hidden;
+            width: 100%;
+        } 
+
+        /* FORZAR QUE NUNCA SALGA LA "MANITO" DEL NAVEGADOR */
+        a, button, [type="button"], [type="submit"] {
+            cursor: none !important;
+        }
         
-        /* Cursor mejorado: transition-opacity para que desaparezca suave al salir */
+        /* Cursor mejorado */
         .cursor-dot {
             pointer-events: none; 
             z-index: 9999; 
             mix-blend-mode: difference;
-            transition: opacity 0.3s ease, transform 0.1s ease; /* Suavidad al desaparecer */
-        }
-
-        .noise {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 50; opacity: 0.05;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease, transform 0.1s ease;
+            transform-origin: center;
         }
 
         /* --- ANIMACIONES DEL LOADER --- */
@@ -55,6 +67,10 @@
             letter-spacing: -0.02em;
         }
 
+        .font-kantumruy {
+            font-family: 'Kantumruy Pro', sans-serif;
+        }
+
         .animate-fadeOutLoader { 
             animation: fadeOutLoader 1.5s ease-out forwards; 
         }
@@ -66,17 +82,15 @@
         
     </style>
 </head>
-<body class="text-white font-sans selection:bg-white selection:text-black overflow-x-hidden">
+<body class="text-white font-sans selection:bg-white selection:text-black">
 
     <div id="loader" class="fixed inset-0 bg-black flex items-center justify-center z-[100]">
         <h1 id="loader-text" class="text-5xl leading-none font-poppins uppercase tracking-[0.2em] text-white text-center absolute whitespace-nowrap">
             Octavio Skiaffos
         </h1>
     </div>
-
-    <div class="noise"></div>
     
-    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+    <div id="cursor" class="cursor-dot fixed w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center"></div>
 
     <nav id="navbar" class="fixed top-0 w-full z-50 px-8 py-8 flex items-center transition-all duration-500 pointer-events-none opacity-0">
         <div id="nav-bg" class="absolute inset-0 bg-black/0 backdrop-blur-0 transition-all duration-500 z-[-1]"></div>
@@ -96,7 +110,7 @@
         </div>
 
         <div class="flex-1 flex justify-end">
-            <a href="#contacto" class="pointer-events-auto text-[10px] md:text-xs tracking-widest uppercase text-white transition-all ">
+            <a href="#contacto" class="pointer-events-auto text-[10px] md:text-xs tracking-widest uppercase text-white transition-all hover:text-gray-400">
                 Contacto 
                 <span class="absolute bottom-0 left-0 w-0 h-px bg-white transition-all group-hover:w-full"></span>
             </a>
@@ -104,7 +118,8 @@
     </nav>
 
     <header class="h-screen w-full relative overflow-hidden bg-black flex flex-col md:flex-row">
-        <div class="relative w-full h-1/2 md:w-1/2 md:h-full overflow-hidden group border-b md:border-b-0 md:border-r border-white/10">
+        
+        <a href="commissions.html" class="relative w-full h-1/2 md:w-1/2 md:h-full overflow-hidden group border-b md:border-b-0 md:border-r border-white/10 block cursor-none">
             <img src="optimizadas_web/saramalacara/70.webp" 
                  alt="Retrato Artístico 1" 
                  class="w-full h-full object-cover object-[0%_10%] grayscale hover:grayscale-0 transition-all duration-1000 ease-in-out transform scale-100 hover:scale-105">
@@ -112,62 +127,45 @@
             <div class="absolute bottom-6 left-6 z-10 mix-blend-difference pointer-events-none">
                 <span class="text-xs uppercase tracking-widest text-white/70">SARAMALACARA</span>
             </div>
-        </div>
+        </a>
 
-        <div class="relative w-full h-1/2 md:w-1/2 md:h-full group">
+        <a href="playground.html" class="relative w-full h-1/2 md:w-1/2 md:h-full group block cursor-none">
             <img src="optimizadas_web/20s/21.webp" 
                  alt="Retrato Artístico 2" 
                  class="w-full h-full object-cover object-[0%_5%] grayscale hover:grayscale-0 transition-all duration-1000 ease-in-out transform scale-100 hover:scale-105">
                  
             <div class="absolute bottom-6 right-6 z-10 mix-blend-difference pointer-events-none">
-                <span class="text-xs uppercase tracking-widest text-white/70">20S</span>
+                <span class="text-xs uppercase tracking-widest text-white/70">playground</span>
             </div>
-        </div>
+        </a>
     </header>
 
     <section id="obra" class="py-40 px-4 md:px-12 bg-black relative z-10">
-        <div class="mb-32 flex flex-col items-start animate-on-scroll opacity-0 transition-opacity duration-1000">
-            <span class="text-xs text-gray-500 font-mono mb-4 tracking-widest">01. ARCHIVE</span>
-            <h2 class="text-5xl md:text-7xl font-serif italic text-white">Selección Visual</h2>
-        </div>
+        <a href="editorial.html"><div class="mb-32 flex flex-col items-start animate-on-scroll opacity-0 transition-opacity duration-1000">
+            <span class="text-xs text-gray-500 font-mono mb-4 tracking-widest">04. EDITORIAL</span>
+            <h2 class="text-5xl md:text-7xl font-kantumruy font-light text-white">Editorial</h2>
+        </div/a>
 
-        <div class="relative w-full mb-40 group animate-on-scroll opacity-0 transition-all duration-1000 translate-y-20">
+        <a href="editorial.html" class="relative w-full mb-40 group animate-on-scroll opacity-0 transition-all duration-1000 translate-y-20 block cursor-none">
             <div class="w-full overflow-hidden grayscale hover:grayscale-0 transition duration-1000 ease-in-out relative">
                 <img src="optimizadas_web/editorial/145.webp" 
                      alt="Obra 1" 
                      class="block w-full h-auto transform scale-100 group-hover:scale-105 transition duration-1000">
                 <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition duration-1000"></div>
             </div>
-            <div class="mt-6 flex justify-between items-end border-t border-white/20 pt-4">
-                <h3 class="text-3xl font-serif italic">Sombras Urbanas</h3>
-                <span class="text-xs font-mono text-gray-400">N° 001 &mdash; 2025</span>
-            </div>
-        </div>
+        </a>
 
-        <div class="relative w-full mb-40 group animate-on-scroll opacity-0 transition-all duration-1000 translate-y-20">
+        <a href="editorial.html" class="relative w-full mb-40 group animate-on-scroll opacity-0 transition-all duration-1000 translate-y-20 block cursor-none">
             <div class="w-full overflow-hidden grayscale hover:grayscale-0 transition duration-1000 ease-in-out relative">
                 <img src="IMG/editorial/200.jpeg" 
                      alt="Obra 1" 
                      class="block w-full h-auto transform scale-100 group-hover:scale-105 transition duration-1000">
                 <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition duration-1000"></div>
             </div>
-        </div>
-    </section>
-
-    <section id="manifiesto" class="py-40 px-8 bg-zinc-950 text-center flex flex-col items-center justify-center min-h-[90vh] relative z-10 border-y border-white/10">
-        <span class="text-xs text-red-600 font-mono mb-12 tracking-[0.5em] uppercase animate-on-scroll opacity-0">02. Warning</span>
-        <p class="text-3xl md:text-6xl font-serif leading-tight max-w-5xl text-gray-300 animate-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-300">
-            "La fotografía no es ver. <br>Es <span class="text-white italic underline decoration-1 underline-offset-8 decoration-red-900">sentir</span> lo que otros ignoran."
-        </p>
-        <div class="w-[1px] h-32 bg-gradient-to-b from-white to-transparent my-16 animate-on-scroll opacity-0 delay-500"></div>
-        <p class="text-sm md:text-base text-gray-500 max-w-xl leading-loose font-light tracking-wide animate-on-scroll opacity-0 translate-y-10 transition-all duration-1000 delay-700">
-            Mi proceso es destructivo. Elimino el color, elimino el contexto, elimino la comodidad. Lo que queda es la cruda realidad de la forma y la luz.
-        </p>
+        </a>
     </section>
 
     <section id="contacto" class="h-screen flex flex-col justify-center items-center bg-black relative z-10">
-        <span class="absolute top-12 left-12 text-xs text-gray-600 tracking-widest">INQUIRIES / BOOKING</span>
-        
         <div class="relative group">
             <a href="mailto:art@octavioskiaffos.com" class="text-5xl md:text-8xl font-serif italic text-white mix-blend-difference hover:text-red-600 transition duration-700">
                 Contactar
@@ -176,15 +174,14 @@
         </div>
         
         <div class="mt-20 flex space-x-16">
-            <a href="#" class="text-[10px] tracking-[0.3em] uppercase text-gray-400 hover:text-white transition">Instagram</a>
-            <a href="#" class="text-[10px] tracking-[0.3em] uppercase text-gray-400 hover:text-white transition">Behance</a>
+            <a href="https://www.instagram.com/octavioskiaffos/" class="text-[10px] tracking-[0.3em] uppercase text-gray-400 hover:text-white transition">Instagram</a>
         </div>
 
         <footer class="absolute bottom-12 w-full text-center border-t border-white/5 pt-8">
-            <p class="text-[9px] text-gray-700 tracking-[0.4em] uppercase">
+            <p class="text-xs text-gray-500 tracking-[0.4em] uppercase mb-2">
                 Octavio Skiaffos &bull; Fine Art Photography &bull; 2026
             </p>
-            <p class="text-[9px] text-gray-700 tracking-[0.4em] uppercase">
+            <p class="text-xs text-gray-500 tracking-[0.4em] uppercase">
                 Designed by Martin Labra
             </p>
         </footer>
@@ -192,7 +189,6 @@
 
     <script>
         // --- 1. FORZAR SCROLL AL INICIO AL RECARGAR ---
-        // Esto le dice al navegador que no recuerde dónde estaba el usuario.
         if (history.scrollRestoration) {
             history.scrollRestoration = 'manual';
         }
@@ -201,22 +197,21 @@
         // --- 2. CURSOR ---
         const cursor = document.getElementById('cursor');
         
-        // Movimiento básico
         const moveCursor = (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         }
         document.addEventListener('mousemove', moveCursor);
 
-        // Ocultar cursor si sale de la ventana
         document.addEventListener('mouseleave', () => {
             cursor.classList.add('opacity-0');
         });
         
-        // Mostrar cursor al volver a entrar
         document.addEventListener('mouseenter', () => {
             cursor.classList.remove('opacity-0');
         });
+
+        // --- 3. ANIMACIÓN CURSOR EN TODOS LOS LINKS ---
 
         // Scroll animation observer
         const observer = new IntersectionObserver((entries) => {
@@ -255,7 +250,7 @@
 
             // Asegurar bloqueo de scroll
             document.body.classList.add('overflow-hidden');
-            window.scrollTo(0, 0); // Doble seguridad
+            window.scrollTo(0, 0);
 
             setTimeout(() => {
                 loaderText.classList.add('animate-moveText');

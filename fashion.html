@@ -12,33 +12,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Zen+Kaku+Gothic+Antique:wght@300;400;900&display=swap" rel="stylesheet">
         
     <style>
+        /* --- CURSOR NUCLEAR: OCULTAR TODO --- */
+        * { cursor: none !important; }
+
         /* --- RESET Y BASE --- */
         html, body {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             overflow: hidden; 
-            
-            /* FONDO GRIS PIEDRA (Stone Grey) */
-            background-color: #d6d6d6;
-            background-image: radial-gradient(circle at center, #e3e3e3 0%, #bfbfbf 100%);
-            
-            color: #0a0a0a; /* Texto casi negro */
+            background-color: #ffffff; /* Default: Blanco */
+            color: #000000; 
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         /* --- TEXTURA DE RUIDO --- */
         .noise {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 50; 
-            opacity: 0.08; 
+            opacity: 0.05; 
             mix-blend-mode: multiply;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
         
-        /* --- CURSOR --- */
+        /* --- CURSOR PERSONALIZADO --- */
         .cursor-dot {
-            pointer-events: none; z-index: 9999; mix-blend-mode: difference;
-            background-color: white; /* Invertirá a negro */
-            transition: opacity 0.3s ease, transform 0.1s ease;
+            pointer-events: none; z-index: 9999; 
+            mix-blend-mode: difference;
+            background-color: white; 
+            transition: transform 0.15s ease-out; 
         }
 
         /* --- CONTENEDOR PRINCIPAL DEL SCROLL --- */
@@ -55,234 +56,289 @@
 
         /* --- GRUPO DE ALBUM --- */
         .album-group {
-            display: flex;
-            gap: 4vw; 
-            align-items: center;
-            flex: 0 0 auto; 
+            display: flex; gap: 4vw; align-items: center;
+            flex: 0 0 auto; position: relative;
         }
 
         /* --- TEXTO LATERAL DEL ALBUM --- */
         .album-header {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            height: 70vh; 
-            padding-bottom: 10px;
-            margin-right: 2vw;
-            border-right: 1px solid rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; justify-content: flex-end;
+            height: 70vh; padding-bottom: 10px; margin-right: 2vw;
+            border-right: 1px solid currentColor; 
+            border-right-color: rgba(125, 125, 125, 0.3); 
             padding-right: 4vw;
         }
         .album-title {
             font-family: 'Zen Kaku Gothic Antique', sans-serif;
-            font-weight: 900;
-            font-size: 3rem;
-            line-height: 0.9;
-            text-transform: uppercase;
-            color: #000000;
-            white-space: nowrap;
+            font-weight: 900; font-size: 3rem; line-height: 0.9;
+            text-transform: uppercase; white-space: nowrap;
+            color: inherit; 
         }
         .album-year {
             font-family: monospace;
-            color: #666;
-            margin-top: 1rem;
-            font-size: 0.8rem;
-            letter-spacing: 0.2em;
+            opacity: 0.6; 
+            margin-top: 1rem; font-size: 0.8rem; letter-spacing: 0.2em;
         }
 
-        /* --- FOTOS (A COLOR) --- */
-        .img-wrapper {
-            flex: 0 0 auto; position: relative;
-            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.2);
-        }
+        /* --- FOTOS --- */
+        .img-wrapper { flex: 0 0 auto; position: relative; box-shadow: none; }
 
         .fashion-img {
-            height: 70vh; 
-            width: auto; 
-            max-width: none; 
-            object-fit: cover;
-            /* SIN FILTROS - COLOR REAL */
+            height: 70vh; width: auto; max-width: none; object-fit: cover;
             transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
+        .fashion-img:hover { transform: scale(1.02); }
 
-        .fashion-img:hover {
-            transform: scale(1.02);
-        }
-
-        /* --- CONTROLES INFERIORES (START / END / BARRA) --- */
+        /* --- CONTROLES INFERIORES --- */
         .bottom-controls {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
+            position: fixed; bottom: 40px; left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            z-index: 60;
-            /* Ajuste para móviles */
-            width: 90%;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 60; width: auto;
+            gap: 40px; /* Más espacio entre selectores y timeline */
         }
 
-        .nav-btn {
-            font-family: monospace;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #666;
-            cursor: pointer;
-            background: none; border: none;
-            transition: color 0.3s ease, transform 0.2s ease;
+        /* SELECTOR DE COLOR (MODIFICADO: Cuadrados grandes) */
+        .theme-switcher {
+            display: flex; gap: 15px; /* Separación entre botones */
         }
-        .nav-btn:hover {
-            color: #000;
-            transform: scale(1.1);
+        .theme-btn {
+            width: 30px; height: 30px; /* Tamaño clickeable grande */
+            border: 1px solid rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            /* Sin border-radius = Cuadrados */
         }
+        .theme-btn:hover { transform: scale(1.2); }
 
+        /* BARRA DE PROGRESO (MODIFICADA: Más grande) */
         .progress-bar {
-            position: relative;
-            width: 300px; /* Ancho fijo para escritorio */
-            height: 2px;
-            background: rgba(0,0,0,0.05);
+            position: relative; 
+            width: 600px; /* Más ancha */
+            height: 4px;  /* Más gruesa */
+            background: rgba(125,125,125, 0.3); 
+            display: flex; align-items: center;
         }
         .progress-fill {
-            height: 100%; 
-            background: #1a1a1a;
-            width: 0%; transition: width 0.1s linear;
+            height: 100%; width: 0%;
+            background: currentColor; 
         }
         
-        /* Ajuste responsivo para la barra */
+        /* PUNTOS DE NAVEGACIÓN (WAYPOINTS - Ajustados) */
+        .timeline-marker {
+            position: absolute; top: 50%; transform: translate(-50%, -50%);
+            width: 16px; height: 16px; /* Puntos más grandes */
+            background-color: inherit; 
+            border: 1px solid currentColor;
+            border-radius: 50%; /* Los puntos siguen siendo redondos */
+            z-index: 10;
+            transition: transform 0.2s ease;
+        }
+        .timeline-marker:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+
         @media (max-width: 768px) {
-            .progress-bar { width: 150px; }
+            .progress-bar { width: 250px; }
+            .bottom-controls { gap: 20px; bottom: 20px; flex-direction: column; }
+            .album-header { height: 50vh; }
+            .fashion-img { height: 50vh; }
         }
     </style>
 </head>
-<body class="selection:bg-black selection:text-white">
+<body class="selection:bg-gray-500 selection:text-white">
 
     <div class="noise"></div>
     
     <div id="cursor" class="cursor-dot fixed w-4 h-4 rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
     
-    <a href="gallery1.html" class="fixed top-8 left-8 z-[60] text-xs font-mono tracking-[0.3em] text-black/50 hover:text-black transition uppercase">
-        &larr; Home
+    <a href="gallery1.html" id="back-btn" class="fixed top-8 left-8 z-[60] text-xs font-mono tracking-[0.3em] transition uppercase" style="color: rgba(0,0,0,0.5);">
+        &larr; Gallery
     </a>
 
     <main class="horizontal-scroll-container" id="scroll-container">
         
-        <div class="album-group">
+        <div class="album-group" data-marker="01">
             <div class="album-header">
                 <h2 class="album-title">01.<br>DOS LOBOS</h2>
                 <p class="album-year">2024 / CAMPAIGN</p>
             </div>
-            
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/27.webp" class="fashion-img" alt="DL 1"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/40.webp" class="fashion-img" alt="DL 2"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/41.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/42.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/43.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/44.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/45.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/52.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/53.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/54.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/55.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/56.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/57.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/76.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/77.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/78.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/84.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/93.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/94.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/112.webp" class="fashion-img" alt="DL 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/doslobos/116.webp" class="fashion-img" alt="DL 3"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/27.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/40.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/41.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/42.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/43.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/44.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/45.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/52.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/53.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/56.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/57.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/76.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/77.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/78.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/84.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/93.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/94.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/112.webp" class="fashion-img" alt="DL"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/doslobos/116.webp" class="fashion-img" alt="DL"></div>
         </div>
 
-        <div class="album-group">
+        <div class="album-group" data-marker="02">
             <div class="album-header">
                 <h2 class="album-title">02.<br>JOIA</h2>
                 <p class="album-year">ROPA</p>
             </div>
-            
-            <div class="img-wrapper"><img src="optimizadas_web/joia/14.webp" class="fashion-img" alt="Joia 1"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/joia/15.webp" class="fashion-img" alt="Joia 2"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/joia/29.webp" class="fashion-img" alt="Joia 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/joia/47.webp" class="fashion-img" alt="Joia 4"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/joia/48.webp" class="fashion-img" alt="Joia 5"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/joia/49.webp" class="fashion-img" alt="Joia 6"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/joia/50.webp" class="fashion-img" alt="Joia 7"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/joia/51.webp" class="fashion-img" alt="Joia 8"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/joia/14.webp" class="fashion-img" alt="Joia"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/joia/15.webp" class="fashion-img" alt="Joia"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/joia/29.webp" class="fashion-img" alt="Joia"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/joia/47.webp" class="fashion-img" alt="Joia"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/joia/48.webp" class="fashion-img" alt="Joia"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/joia/49.webp" class="fashion-img" alt="Joia"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/joia/50.webp" class="fashion-img" alt="Joia"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/joia/51.webp" class="fashion-img" alt="Joia"></div>
         </div>
 
-        <div class="album-group">
+        <div class="album-group" data-marker="03">
             <div class="album-header">
                 <h2 class="album-title">03.<br>LESANG</h2>
                 <p class="album-year">COVER ART</p>
             </div>
-            
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/1.webp" class="fashion-img" alt="Lesang 1"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/2.webp" class="fashion-img" alt="Lesang 2"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/3.webp" class="fashion-img" alt="Lesang 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/6.webp" class="fashion-img" alt="Lesang 4"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/8.webp" class="fashion-img" alt="Lesang 5"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/10.webp" class="fashion-img" alt="Lesang 6"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/30.webp" class="fashion-img" alt="Lesang 7"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/35.webp" class="fashion-img" alt="Lesang 8"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/36.webp" class="fashion-img" alt="Lesang 9"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/38.webp" class="fashion-img" alt="Lesang 10"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/82.webp" class="fashion-img" alt="Lesang 11"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/83.webp" class="fashion-img" alt="Lesang 12"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/95.webp" class="fashion-img" alt="Lesang 13"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/96.webp" class="fashion-img" alt="Lesang 14"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/111.webp" class="fashion-img" alt="Lesang 15"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/115.webp" class="fashion-img" alt="Lesang 16"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/120.webp" class="fashion-img" alt="Lesang 17"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/122.webp" class="fashion-img" alt="Lesang 18"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/lesang/126.webp" class="fashion-img" alt="Lesang 19"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/1.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/2.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/3.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/6.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/8.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/10.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/30.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/35.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/36.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/38.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/82.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/83.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/95.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/96.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/111.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/115.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/120.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/122.webp" class="fashion-img" alt="Lesang"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/lesang/126.webp" class="fashion-img" alt="Lesang"></div>
         </div>
 
-        <div class="album-group">
+        <div class="album-group" data-marker="04">
             <div class="album-header">
                 <h2 class="album-title">04.<br>SA</h2>
                 <p class="album-year">SA</p>
             </div>
-            
-            <div class="img-wrapper"><img src="optimizadas_web/sa/109.webp" class="fashion-img" alt="SA 1"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/sa/7.webp" class="fashion-img" alt="SA 2"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/sa/13.webp" class="fashion-img" alt="SA 3"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/sa/31.webp" class="fashion-img" alt="SA 4"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/sa/32.webp" class="fashion-img" alt="SA 5"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/sa/33.webp" class="fashion-img" alt="SA 6"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/sa/34.webp" class="fashion-img" alt="SA 7"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/sa/37.webp" class="fashion-img" alt="SA 8"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/sa/39.webp" class="fashion-img" alt="SA 9"></div>
-            <div class="img-wrapper"><img src="optimizadas_web/sa/143.webp" class="fashion-img" alt="SA 10"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/sa/109.webp" class="fashion-img" alt="SA"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/sa/7.webp" class="fashion-img" alt="SA"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/sa/13.webp" class="fashion-img" alt="SA"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/sa/31.webp" class="fashion-img" alt="SA"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/sa/32.webp" class="fashion-img" alt="SA"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/sa/33.webp" class="fashion-img" alt="SA"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/sa/34.webp" class="fashion-img" alt="SA"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/sa/37.webp" class="fashion-img" alt="SA"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/sa/39.webp" class="fashion-img" alt="SA"></div>
+            <div class="img-wrapper"><img src="optimizadas_web/sa/143.webp" class="fashion-img" alt="SA"></div>
         </div>
         
         <div style="min-width: 20vw;"></div>
-
     </main>
 
     <div class="bottom-controls">
-        <button id="btn-start" class="nav-btn">Start</button>
-        
-        <div class="progress-bar">
+        <div class="theme-switcher">
+            <button class="theme-btn bg-white" onclick="setTheme('white')"></button>
+            <button class="theme-btn bg-[#a3a3a3]" onclick="setTheme('gray')"></button>
+            <button class="theme-btn bg-black border-gray-600" onclick="setTheme('black')"></button>
+        </div>
+
+        <div class="progress-bar" id="timeline-track">
             <div class="progress-fill" id="progress-fill"></div>
         </div>
-        
-        <button id="btn-end" class="nav-btn">End</button>
     </div>
 
     <script>
         // --- SCRIPT DE MOVIMIENTO FLUIDO (LERP) ---
         const container = document.getElementById('scroll-container');
         const progressBar = document.getElementById('progress-fill');
-        const btnStart = document.getElementById('btn-start');
-        const btnEnd = document.getElementById('btn-end');
+        const timelineTrack = document.getElementById('timeline-track');
+        const albumGroups = document.querySelectorAll('.album-group');
+        const backBtn = document.getElementById('back-btn');
         
         let currentScroll = 0;  
         let targetScroll = 0;   
         let isScrolling = false;
         const ease = 0.08; 
+
+        // --- LÓGICA DE TEMAS (COLORES) ---
+        function setTheme(mode) {
+            const body = document.body;
+            // Los marcadores se generan dinámicamente, así que los seleccionamos aquí
+            const markers = document.querySelectorAll('.timeline-marker');
+
+            if (mode === 'white') {
+                // Fondo Blanco, Texto Negro
+                body.style.backgroundColor = '#ffffff';
+                body.style.color = '#000000';
+                backBtn.style.color = 'rgba(0,0,0,0.5)';
+                
+                // Marcadores: Fondo Blanco, Borde Negro
+                markers.forEach(m => {
+                    m.style.backgroundColor = '#ffffff';
+                    m.style.borderColor = '#000000';
+                });
+
+            } else if (mode === 'gray') {
+                // Fondo Gris, Texto Negro
+                body.style.backgroundColor = '#b0b0b0';
+                body.style.color = '#000000';
+                backBtn.style.color = 'rgba(0,0,0,0.5)';
+                
+                // Marcadores: Fondo Gris, Borde Negro
+                markers.forEach(m => {
+                    m.style.backgroundColor = '#b0b0b0';
+                    m.style.borderColor = '#000000';
+                });
+
+            } else if (mode === 'black') {
+                // Fondo Negro, Texto Blanco
+                body.style.backgroundColor = '#000000';
+                body.style.color = '#ffffff';
+                backBtn.style.color = 'rgba(255,255,255,0.5)';
+                
+                // Marcadores: Fondo Negro, Borde Blanco
+                markers.forEach(m => {
+                    m.style.backgroundColor = '#000000';
+                    m.style.borderColor = '#ffffff';
+                });
+            }
+        }
+
+        // 0. GENERAR PUNTOS EN LA LÍNEA DE TIEMPO (Waypoints)
+        window.addEventListener('load', () => {
+            const maxScroll = container.scrollWidth - window.innerWidth;
+            
+            albumGroups.forEach((group) => {
+                const leftPos = group.offsetLeft;
+                const scrollPercent = (leftPos / maxScroll) * 100;
+
+                const marker = document.createElement('div');
+                marker.classList.add('timeline-marker');
+                marker.style.left = `${Math.min(scrollPercent, 100)}%`;
+                
+                // Inicializar colores del marcador (Default Blanco)
+                marker.style.backgroundColor = '#ffffff';
+                marker.style.borderColor = '#000000';
+
+                marker.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    targetScroll = leftPos;
+                    updateConstraints();
+                    startAnimation();
+                });
+                
+                timelineTrack.appendChild(marker);
+            });
+        });
 
         // 1. Scroll con Rueda / Trackpad
         window.addEventListener('wheel', (e) => {
@@ -293,19 +349,6 @@
             startAnimation();
         }, { passive: false });
 
-        // 2. Click en Botón Inicio
-        btnStart.addEventListener('click', () => {
-            targetScroll = 0;
-            startAnimation();
-        });
-
-        // 3. Click en Botón Fin
-        btnEnd.addEventListener('click', () => {
-            targetScroll = container.scrollWidth - window.innerWidth;
-            startAnimation();
-        });
-
-        // Auxiliares
         function updateConstraints() {
             const maxScroll = container.scrollWidth - window.innerWidth;
             targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
@@ -318,7 +361,6 @@
             }
         }
 
-        // Loop de Animación
         function animateScroll() {
             currentScroll += (targetScroll - currentScroll) * ease;
             container.scrollLeft = currentScroll;
@@ -329,7 +371,6 @@
                 progressBar.style.width = percent + '%';
             }
 
-            // Parar si ya llegamos
             if (Math.abs(targetScroll - currentScroll) > 0.5) {
                 requestAnimationFrame(animateScroll);
             } else {
@@ -344,16 +385,6 @@
             cursor.style.top = e.clientY + 'px';
         });
 
-        // Hover Effect
-        document.querySelectorAll('.fashion-img').forEach(img => {
-            img.addEventListener('mouseenter', () => {
-                cursor.style.transform = "translate(-50%, -50%) scale(2.5)";
-                cursor.style.mixBlendMode = "difference";
-            });
-            img.addEventListener('mouseleave', () => {
-                cursor.style.transform = "translate(-50%, -50%) scale(1)";
-            });
-        });
     </script>
 </body>
 </html>
